@@ -1,11 +1,6 @@
 import React, {useState} from 'react';
 import Session from "../components/session";
-import generateProblems from "../common/generate_problems";
 
-
-const skipStart = true
-
-generateProblems();
 
 const MainScreen = () => {
     const [state, setState] = useState("started")

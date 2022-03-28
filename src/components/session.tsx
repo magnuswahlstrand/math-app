@@ -4,7 +4,7 @@ import {AnswerBox} from "./answerBox";
 import generateProblems from "../common/generate_problems";
 
 function ProblemBox(props: { text: string }) {
-    return (<div>
+    return (<div style={{fontSize: "2em"}}>
         {props.text}
     </div>);
 }
@@ -24,19 +24,17 @@ function useSession(problems: Problem[], onCompleted: () => void) {
 
 
     const handleAnswer = (answer: string) => {
-        console.log('submit')
-        // Correct
-        if (problem.answer.toString() === answer) {
-            if (p === problems.length - 1) {
-                console.log("call on end")
-                onCompleted()
-            }
-
-            setProblemIndex(p + 1)
-            return true
-        } else {
+        if (problem.answer.toString() !== answer)
             return false
+
+
+        // Correct
+        if (p === problems.length - 1) {
+            console.log("call on end")
+            onCompleted()
         }
+        setProblemIndex(p + 1)
+        return true
     }
 
 
@@ -44,8 +42,10 @@ function useSession(problems: Problem[], onCompleted: () => void) {
     return {text: problem.text, handleAnswer};
 }
 
+const numProblems = 10;
+
 const Session: React.FC<InputProps> = ({onCompleted}) => {
-    const {text, handleAnswer} = useSession(generateProblems(), onCompleted);
+    const {text, handleAnswer} = useSession(generateProblems(numProblems), onCompleted);
 
     if (text === "") {
         return (<div></div>)
