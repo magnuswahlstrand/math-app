@@ -18,17 +18,36 @@ const multipliedBy = (v: number) => {
     })
 }
 
-const generateProblems = (n: number) => {
-    return _.shuffle([
-        ...multipliedBy(3),
-        ...multipliedBy(4),
-        ...multipliedBy(6),
-        ...multipliedBy(7),
-        ...dividedBy(2),
-        ...dividedBy(3),
-        ...dividedBy(4),
-        ...dividedBy(5),
-    ]).slice(0, n)
+const mediumProblems = [
+    ...multipliedBy(3),
+    ...multipliedBy(4),
+    ...multipliedBy(5),
+    ...multipliedBy(6),
+    ...multipliedBy(7),
+    ...dividedBy(2),
+    ...dividedBy(3),
+    ...dividedBy(4),
+    ...dividedBy(5),
+]
+
+const hardProblems = [
+    ...multipliedBy(7),
+    ...multipliedBy(8),
+    ...multipliedBy(9),
+    ...multipliedBy(12),
+    ...multipliedBy(13),
+    ...dividedBy(3),
+    ...dividedBy(4),
+    ...dividedBy(5),
+    ...dividedBy(6),
+    ...dividedBy(7),
+]
+
+const generateProblems = (n: number, hard: boolean) => {
+    if(hard)
+        return _.shuffle(hardProblems).slice(0, n)
+
+    return _.shuffle(mediumProblems).slice(0, n)
 }
 
 export default generateProblems;

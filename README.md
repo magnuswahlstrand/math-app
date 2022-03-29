@@ -1,5 +1,6 @@
 ## TODO
-* Publish
-* Test on mobile
-* Test with user
-* Press enter to restart
+* [x] Publish
+* [x] Test on mobile
+* [x] Test with user
+* [x] Press enter to restart
+* [ ] Track incorrect

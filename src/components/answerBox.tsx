@@ -16,10 +16,12 @@ const inputStyle: CSS.Properties = {
 
 export const AnswerBox: React.FC<InputProps> = ({onAnswerSubmitted}) => {
     const [answer, setAnswer] = useState("")
+    const [wasCorrect, setWasCorrect] = useState(true)
+
     return (
         <div>
             <input
-                style={inputStyle}
+                style={{...inputStyle, backgroundColor: wasCorrect ? "white" : "salmon"}}
                 type="tel"
                 autoFocus
                 value={answer}
@@ -27,10 +29,10 @@ export const AnswerBox: React.FC<InputProps> = ({onAnswerSubmitted}) => {
                     setAnswer(e.target.value)
                 }}
                 onKeyPress={(e) => {
-                    if (e.key === 'Enter') {
+                    if (e.key === 'Enter' && answer !== "") {
                         const correct = onAnswerSubmitted(answer)
-                        if (correct)
-                            setAnswer("")
+                        setAnswer("")
+                        setWasCorrect(correct)
                     }
                 }}/>
         </div>
