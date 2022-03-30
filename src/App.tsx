@@ -60,15 +60,29 @@ function useSession(numExercises: number, onCompleted: () => void, state: string
 
 const numProblems = 12;
 
+const HardText = "Christian Pro 👽"
+const MediumText = "William Pro 💀"
+
 const AppHeader: React.FC<{ progress: Progress, hardMode: boolean, onToggleMode: () => void }> = (
     {
         progress, hardMode, onToggleMode,
     }) => {
 
-    const button = <button onClick={onToggleMode}>{hardMode ? "HARD" : "MEDIUM"}</button>
+    const buttonStyle = {
+        "fontSize": "2em",
+        "marginBottom": "10px",
+        "padding": "15px",
+        "width": "100%",
+        "backgroundColor": "black",
+        "color": "white"
+    }
+
+    const button = <button onClick={onToggleMode} style={buttonStyle}>{hardMode ? HardText : MediumText} (click
+        me)</button>
 
     return (<header className="App-header">
-        Problem {progress.current} av {progress.total} {button}
+        {button}
+        Problem {progress.current} av {progress.total}
     </header>)
 }
 
