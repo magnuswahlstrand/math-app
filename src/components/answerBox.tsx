@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {FormEvent, useState} from "react";
 import CSS from 'csstype';
 
 
@@ -13,13 +13,20 @@ const inputStyle: CSS.Properties = {
     textAlign: "center",
 }
 
-
 export const AnswerBox: React.FC<InputProps> = ({onAnswerSubmitted}) => {
     const [answer, setAnswer] = useState("")
     const [wasCorrect, setWasCorrect] = useState(true)
 
+    const handleSubmit = (e: FormEvent) => {
+        e.preventDefault()
+        if (answer !== "") {
+            const correct = onAnswerSubmitted(answer)
+            setAnswer("")
+            setWasCorrect(correct)
+        }
+    };
     return (
-        <div>
+        <form onSubmit={(e) => handleSubmit(e)}>
             <input
                 style={{...inputStyle, backgroundColor: wasCorrect ? "white" : "salmon"}}
                 type="tel"
@@ -28,14 +35,8 @@ export const AnswerBox: React.FC<InputProps> = ({onAnswerSubmitted}) => {
                 onChange={(e) => {
                     setAnswer(e.target.value)
                 }}
-                onKeyPress={(e) => {
-                    if (e.key === 'Enter' && answer !== "") {
-                        const correct = onAnswerSubmitted(answer)
-                        setAnswer("")
-                        setWasCorrect(correct)
-                    }
-                }}/>
-        </div>
+            />
+        </form>
     );
 }
 

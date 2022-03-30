@@ -20,6 +20,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "deploy": "npm run build && gsutil -m cp -r build/*  gs://math-app",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

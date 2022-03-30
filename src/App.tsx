@@ -18,7 +18,7 @@ function useSession(numExercises: number, onCompleted: () => void, state: string
         } else {
             console.log("- SESSION ENDED")
         }
-    }, [state, hardMode]);
+    }, [numExercises, state, hardMode]);
 
     const progress: Progress = {current: p + 1, total: problems.length}
     const atEnd = p >= problems.length

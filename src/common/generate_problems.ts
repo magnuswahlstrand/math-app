@@ -19,8 +19,6 @@ const multipliedBy = (v: number) => {
 }
 
 const mediumProblems = [
-    ...multipliedBy(3),
-    ...multipliedBy(4),
     ...multipliedBy(5),
     ...multipliedBy(6),
     ...multipliedBy(7),
