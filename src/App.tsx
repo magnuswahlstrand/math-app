@@ -5,20 +5,20 @@ import {Progress} from "./common/types";
 import generateProblems from "./common/generate_problems";
 
 
-function useSession(numExercises: number, onCompleted: () => void, state: string, hardMode: boolean) {
-    const [{index: p, problems}, setProbs] = useState({index: 0, problems: generateProblems(numExercises, hardMode)})
+function useSession(onCompleted: () => void, state: string, hardMode: boolean) {
+    const [{index: p, problems}, setProbs] = useState({index: 0, problems: generateProblems(hardMode)})
     useEffect(() => {
         if (state === "started") {
             console.log("- SESSION STARTED")
             console.log("generate problems")
             setProbs({
                 index: 0,
-                problems: generateProblems(numExercises, hardMode),
+                problems: generateProblems(hardMode),
             })
         } else {
             console.log("- SESSION ENDED")
         }
-    }, [numExercises, state, hardMode]);
+    }, [state, hardMode]);
 
     const progress: Progress = {current: p + 1, total: problems.length}
     const atEnd = p >= problems.length
@@ -58,7 +58,6 @@ function useSession(numExercises: number, onCompleted: () => void, state: string
     }
 }
 
-const numProblems = 12;
 
 const HardText = "Christian Pro 👽"
 const MediumText = "William Pro 💀"
@@ -111,7 +110,7 @@ function App() {
         setState("started")
     }
 
-    const {problem, progress, handleAnswer} = useSession(numProblems, handleCompleted, state, hardMode);
+    const {problem, progress, handleAnswer} = useSession(handleCompleted, state, hardMode);
     useEffect(() => {
         if (state !== "completed")
             return

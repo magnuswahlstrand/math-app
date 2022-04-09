@@ -18,6 +18,38 @@ const multipliedBy = (v: number) => {
     })
 }
 
+const averageOf = (n_numbers: number, n_problems: number) => {
+    let targets = []
+    for (let i = 0; i < n_problems; i++) {
+        targets.push(_.random(1, 6))
+    }
+    const targets_and_numbers = targets.map(target => {
+        let vs = Array(n_numbers).fill(target)
+
+        // Start with all values equal to the target average [4,4,4,4]
+
+        // Increase and decrease the numbers a bit, while keeping the average the same
+        for (let i = 0; i < 20; i++) {
+            const i1 = _.random(0, n_numbers - 1)
+            const i2 = _.random(0, n_numbers - 1)
+
+            // Avoid negative values
+            if (vs[i2] < 1)
+                continue
+
+            vs[i1]++
+            vs[i2]--
+        }
+
+        return {numbers: vs, target: target}
+    })
+
+    return targets_and_numbers.map(p => {
+        var text = p.numbers.slice(0, -1).join(', ') + " och " + p.numbers[p.numbers.length - 1]
+        return {text: `Vad är medelvärdet av ${text}?`, answer: p.target}
+    })
+}
+
 const vehicles = () => {
     const vehicles = [
         {name: "cykel", name2: "cyklar", wheels: 2},
@@ -61,32 +93,41 @@ const mediumProblems = [
     ...multipliedBy(5),
     ...multipliedBy(6),
     ...multipliedBy(7),
-    ...dividedBy(2),
+    ...multipliedBy(8),
+    ...multipliedBy(11),
+    ...multipliedBy(12),
     ...dividedBy(3),
     ...dividedBy(4),
     ...dividedBy(5),
+    ...dividedBy(6),
 ]
 
 const hardProblems = [
     ...stuff(),
-    ...vehicles(),
     ...multipliedBy(7),
     ...multipliedBy(8),
     ...multipliedBy(9),
     ...multipliedBy(12),
     ...multipliedBy(13),
-    ...dividedBy(3),
-    ...dividedBy(4),
-    ...dividedBy(5),
     ...dividedBy(6),
     ...dividedBy(7),
+    ...dividedBy(8),
+    ...dividedBy(9),
+    ...averageOf(2, 10),
+    ...averageOf(3, 10),
+    ...averageOf(4, 2),
 ]
 
-const generateProblems = (n: number, hard: boolean) => {
-    if (hard)
-        return _.shuffle(hardProblems).slice(0, n)
+const numProblems = 12;
+const numHardProblems = 16;
 
-    return _.shuffle(mediumProblems).slice(0, n)
+const generateProblems = (hard: boolean) => {
+
+
+    if (hard)
+        return _.shuffle(hardProblems).slice(0, numHardProblems)
+
+    return _.shuffle(mediumProblems).slice(0, numProblems)
 }
 
 export default generateProblems;
