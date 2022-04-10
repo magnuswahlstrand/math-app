@@ -19,10 +19,10 @@ const multipliedBy = (v: number) => {
     })
 }
 
-const averageOf = (n_numbers: number, n_problems: number) => {
+function generate_averages(n_problems: number, n_numbers: number) {
     let targets = []
     for (let i = 0; i < n_problems; i++) {
-        targets.push(_.random(1, 6))
+        targets.push(_.random(1, 8))
     }
     const targets_and_numbers = targets.map(target => {
         let vs = Array(n_numbers).fill(target)
@@ -30,12 +30,12 @@ const averageOf = (n_numbers: number, n_problems: number) => {
         // Start with all values equal to the target average [4,4,4,4]
 
         // Increase and decrease the numbers a bit, while keeping the average the same
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < 30; i++) {
             const i1 = _.random(0, n_numbers - 1)
             const i2 = _.random(0, n_numbers - 1)
 
-            // Avoid negative values
-            if (vs[i2] < 1)
+            // Keep values above 0
+            if (vs[i2] <= 1)
                 continue
 
             vs[i1]++
@@ -44,10 +44,34 @@ const averageOf = (n_numbers: number, n_problems: number) => {
 
         return {numbers: vs, target: target}
     })
+    return targets_and_numbers;
+}
+
+function joinWithAnd(numbers: any[]) {
+    return numbers.slice(0, -1).join(', ') + " och " + numbers[numbers.length - 1];
+}
+
+const averageOf = (n_numbers: number, n_problems: number) => {
+    const targets_and_numbers = generate_averages(n_problems, n_numbers);
 
     return targets_and_numbers.map(p => {
-        var text = p.numbers.slice(0, -1).join(', ') + " och " + p.numbers[p.numbers.length - 1]
+        let text = joinWithAnd(p.numbers)
         return {text: `Vad är medelvärdet av ${text}?`, answer: p.target}
+    })
+}
+
+const missingAverageOf = (n_numbers: number, n_problems: number) => {
+    const targets_and_numbers = generate_averages(n_problems, n_numbers);
+    const persons = ['Anna', 'Bella', 'Christian', 'Didrik']
+
+    return targets_and_numbers.map(p => {
+        const names = joinWithAnd(persons.slice(0, n_numbers))
+        const names_and_ages = _.zip(p.numbers, persons)
+        const hint = names_and_ages.slice(0, -1).map((v: [number, string]) => {
+            return v[1] + ' är '  + v[0]
+        }).join('. ')
+        let [answer, name] = names_and_ages[names_and_ages.length - 1]
+        return {text: `${names}s ålder har medelvärdet ${p.target}. ${hint} Hur gammal är ${name}?`, answer: answer}
     })
 }
 
@@ -200,10 +224,10 @@ const hardProblems = [
     ...dividedBy(6),
     ...dividedBy(7),
     ...dividedBy(8),
-    ...dividedBy(9),
-    ...averageOf(2, 10),
-    ...averageOf(3, 10),
-    ...averageOf(4, 2),
+    ...averageOf(4, 10),
+    ...averageOf(5, 3),
+    ...missingAverageOf(3, 10),
+    ...missingAverageOf(4, 10),
     ...geometric(),
 ]
 
