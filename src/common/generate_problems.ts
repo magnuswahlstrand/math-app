@@ -1,5 +1,6 @@
-var _ = require('lodash');
+import {Problem} from "./types";
 
+var _ = require('lodash');
 
 const dividedBy = (v: number) => {
     const range = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
@@ -86,6 +87,93 @@ const stuff = () => {
     })
 }
 
+type ShapeName = "rectangle" | "square" | "triangle"
+
+const generateSquares: () => Shape[] = () => {
+    return _.times(6, () => {
+        const s = _.random(9, 16)
+        const name: ShapeName = "square"
+
+        return {
+            circumference: 4 * s,
+            area: s * s,
+            type: name,
+            sides: [s, s, s, s]
+        }
+    })
+}
+
+const generateRectangles: () => Shape[] = () => {
+    return _.times(6, () => {
+        const s1 = _.random(9, 20)
+        const s2 = _.random(7, 12)
+        const name: ShapeName = "rectangle"
+
+        return {
+            circumference: 2 * (s1 + s2),
+            area: s1 * s2,
+            type: name,
+            sides: [s1, s2, s1, s2]
+        }
+    })
+}
+const generateTriangles: () => Shape[] = () => {
+    return _.times(6, () => {
+        const [a, b, c] = _.sample([
+            [3, 4, 5],
+            [5, 12, 13],
+            [7, 24, 25],
+        ])
+
+        const name: ShapeName = "triangle"
+
+        return {
+            circumference: c + b + a,
+            area: b * a / 2,
+            type: name,
+            sides: [c, b, a]
+        }
+    })
+}
+
+type Shape = {
+    circumference: number,
+    area: number,
+    type: ShapeName
+    sides: number[]
+}
+
+const geometric = () => {
+    let shapes: Shape[] = []
+    shapes = shapes.concat(...generateSquares())
+    shapes = shapes.concat(...generateRectangles())
+    shapes = shapes.concat(...generateTriangles())
+
+    let problems: Problem[] = []
+
+    // Squares
+    shapes.forEach(s => {
+        const image = {
+            name: s.type,
+            numbers: s.sides
+        }
+
+        problems.push({
+            text: "Hur stor är omkretsen?",
+            answer: s.circumference,
+            image: image,
+        })
+
+        problems.push({
+            text: "Hur stor är arean?",
+            answer: s.area,
+            image: image,
+        })
+    })
+
+    return problems
+}
+
 
 const mediumProblems = [
     ...stuff(),
@@ -116,6 +204,7 @@ const hardProblems = [
     ...averageOf(2, 10),
     ...averageOf(3, 10),
     ...averageOf(4, 2),
+    ...geometric(),
 ]
 
 const numProblems = 12;
