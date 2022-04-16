@@ -62,16 +62,16 @@ const averageOf = (n_numbers: number, n_problems: number) => {
 
 const missingAverageOf = (n_numbers: number, n_problems: number) => {
     const targets_and_numbers = generate_averages(n_problems, n_numbers);
-    const persons = ['Anna', 'Bella', 'Christian', 'Didrik']
+    const persons = ['Anna', 'Bella', 'Christian', 'Didrik'].slice(0, n_numbers)
 
     return targets_and_numbers.map(p => {
-        const names = joinWithAnd(persons.slice(0, n_numbers))
+        const names = joinWithAnd(persons)
         const names_and_ages = _.zip(p.numbers, persons)
         const hint = names_and_ages.slice(0, -1).map((v: [number, string]) => {
             return v[1] + ' är '  + v[0]
         }).join('. ')
         let [answer, name] = names_and_ages[names_and_ages.length - 1]
-        return {text: `${names}s ålder har medelvärdet ${p.target}. ${hint} Hur gammal är ${name}?`, answer: answer}
+        return {text: `${names}s ålder har medelvärdet ${p.target}. ${hint}. Hur gammal är ${name}?`, answer: answer}
     })
 }
 
