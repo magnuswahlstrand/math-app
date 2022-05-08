@@ -148,7 +148,7 @@ function App() {
             <ApplicationContainer header={header} footer={footer}>
 
                 <Group position="center" mx="auto" direction="column" style={{
-                    height: '100vh',
+                    // height: '100vh',
                 }}>
                     <Badge>Problem {progress.current} av {progress.total}</Badge>
                     {state === "completed" && (
