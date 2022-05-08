@@ -136,7 +136,8 @@ function App() {
             </Group>
         </>
     )
-    const t = totalTime(now, startedAt);
+
+    const t = state === "completed" ? "--" : totalTime(now, startedAt);
 
     const footer = (<Group position="left" spacing="xs">
         <Text>⏲️</Text><Text weight="bold">Tid:</Text><Text>{t}</Text>
