@@ -1,7 +1,10 @@
 import {ReactNode} from 'react';
-import {AppShell, Center, Footer, Group, Header, Text} from '@mantine/core';
+import {AppShell, Footer, Group, Header, Text} from '@mantine/core';
+import {useMediaQuery} from "@mantine/hooks";
 
-export function ApplicationContainer(props: { children: ReactNode, header: ReactNode }) {
+export function ApplicationContainer(props: { children: ReactNode, header: ReactNode, footer: ReactNode }) {
+    const matches = useMediaQuery('(min-width: 500px)');
+
     return (
         <AppShell
             styles={{
@@ -11,22 +14,15 @@ export function ApplicationContainer(props: { children: ReactNode, header: React
                 },
             }}
             fixed
-            footer={
-                <Footer height={60} p="md">
-                    <Group position="apart">
-                        <Text size="sm">
-                            <span style={{fontWeight: 'bolder'}}>Last Time:</span> 0h 25m 🍫
-                        </Text>
-                        <Text size="sm">
-                            <span style={{fontWeight: 'bolder'}}>🎉 End Time:</span> 7:51 pm
-                        </Text>
-                    </Group>
-                </Footer>
-            }
             header={
-                <Header height={90} p="lg">
+                <Header height={matches ? 70 : 120} p="lg">
                     {props.header}
                 </Header>
+            }
+            footer={
+                <Footer height={60} p="md">
+                    {props.footer}
+                </Footer>
             }
         >
             {props.children}

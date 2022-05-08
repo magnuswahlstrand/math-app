@@ -233,8 +233,8 @@ const hardProblems = [
     ...geometric(),
 ]
 
-const numProblems = 12;
-const numHardProblems = 16;
+const numProblems = 16;
+const numHardProblems = 18;
 
 const generateProblems = (hard: boolean) => {
 

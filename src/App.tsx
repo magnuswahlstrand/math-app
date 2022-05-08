@@ -3,11 +3,13 @@ import './App.css';
 import ProblemComponent from "./components/session";
 import {Progress} from "./common/types";
 import generateProblems from "./common/generate_problems";
-import {Group, MantineProvider, Switch, Text} from '@mantine/core';
+import {Badge, Group, MantineProvider, Switch, Text} from '@mantine/core';
 import {ApplicationContainer} from "./components/ApplicationContainer";
+import moment from "moment/moment";
 
 
 function useSession(onCompleted: () => void, state: string, hardMode: boolean) {
+    const [startedAt, setStartedAt] = useState(moment()) // TODO: Not a good way of doing this
     const [{index: p, problems}, setProbs] = useState({index: 0, problems: generateProblems(hardMode)})
     useEffect(() => {
         if (state === "started") {
@@ -17,6 +19,7 @@ function useSession(onCompleted: () => void, state: string, hardMode: boolean) {
                 index: 0,
                 problems: generateProblems(hardMode),
             })
+            setStartedAt(moment())
         } else {
             console.log("- SESSION ENDED")
         }
@@ -47,6 +50,7 @@ function useSession(onCompleted: () => void, state: string, hardMode: boolean) {
                     problems: problems,
                 }
             })
+            setStartedAt(moment())
         }
 
         return true
@@ -56,6 +60,7 @@ function useSession(onCompleted: () => void, state: string, hardMode: boolean) {
     return {
         problem: problems[p],
         progress,
+        startedAt,
         handleAnswer
     }
 }
@@ -76,7 +81,27 @@ const handleEnterPressed = (fn: () => void) => {
     }
 }
 
+function useNow() {
+    const [now, setNow] = useState(moment());
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setNow(() => moment());
+        }, 1000);
+        return () => clearInterval(interval);
+    }, []);
+    return now;
+}
+
+function totalTime(now: moment.Moment, startedAt?: moment.Moment) {
+    var duration = moment.duration(now.diff(startedAt));
+    const seconds = duration.seconds()
+    const minutes = duration.minutes()
+    return minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
+}
+
 function App() {
+    const now = useNow()
     const [state, setState] = useState("started")
     const [hardMode, setHardMode] = useState(false)
 
@@ -88,41 +113,43 @@ function App() {
         setState("started")
     }
 
-    const {problem, progress, handleAnswer} = useSession(handleCompleted, state, hardMode);
+    const {problem, progress, startedAt, handleAnswer} = useSession(handleCompleted, state, hardMode);
     useEffect(() => {
         if (state !== "completed")
             return
 
         return handleEnterPressed(handleStart)
     }, [state])
-
     const header = (
         <>
             <Group position="apart">
-
                 <Text size="xl" weight="bolder">
                     Vinthundsgatan 4 - Matte
                 </Text>
                 <Group>
                     <Text size={"xl"} weight="bold">{hardMode ? HardText : MediumText}</Text>
+                    <Switch
+                        checked={hardMode} size="sm"
+                        onChange={(event) => setHardMode(event.currentTarget.checked)}
+                    />
                 </Group>
-            </Group>
-            <Group position="apart" pb="lg">
-                <Text>Problem {progress.current} av {progress.total}</Text>
-                <Switch
-                    checked={hardMode} size="sm"
-                    onChange={(event) => setHardMode(event.currentTarget.checked)}
-                />
             </Group>
         </>
     )
+    const t = totalTime(now, startedAt);
+
+    const footer = (<Group position="left" spacing="xs">
+        <Text>⏲️</Text><Text weight="bold">Tid:</Text><Text>{t}</Text>
+    </Group>)
 
     return (
         <MantineProvider>
-            <ApplicationContainer header={header}>
+            <ApplicationContainer header={header} footer={footer}>
+
                 <Group position="center" mx="auto" direction="column" style={{
                     height: '100vh',
                 }}>
+                    <Badge>Problem {progress.current} av {progress.total}</Badge>
                     {state === "completed" && (
                         <div onClick={handleStart}>Klicka här för att börja om!</div>
                     )}
