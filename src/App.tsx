@@ -3,6 +3,8 @@ import './App.css';
 import ProblemComponent from "./components/session";
 import {Progress} from "./common/types";
 import generateProblems from "./common/generate_problems";
+import {Group, MantineProvider, Switch, Text} from '@mantine/core';
+import {ApplicationContainer} from "./components/ApplicationContainer";
 
 
 function useSession(onCompleted: () => void, state: string, hardMode: boolean) {
@@ -62,29 +64,6 @@ function useSession(onCompleted: () => void, state: string, hardMode: boolean) {
 const HardText = "Christian Pro 👽"
 const MediumText = "William Pro 💀"
 
-const AppHeader: React.FC<{ progress: Progress, hardMode: boolean, onToggleMode: () => void }> = (
-    {
-        progress, hardMode, onToggleMode,
-    }) => {
-
-    const buttonStyle = {
-        "fontSize": "2em",
-        "marginBottom": "10px",
-        "padding": "15px",
-        "width": "100%",
-        "backgroundColor": "black",
-        "color": "white"
-    }
-
-    const button = <button onClick={onToggleMode} style={buttonStyle}>{hardMode ? HardText : MediumText} (click
-        me)</button>
-
-    return (<header className="App-header">
-        {button}
-        Problem {progress.current} av {progress.total}
-    </header>)
-}
-
 const handleEnterPressed = (fn: () => void) => {
     const handleEnterPressedWhenCompleted = (e: KeyboardEvent) => {
         if (e.key === 'Enter')
@@ -100,7 +79,6 @@ const handleEnterPressed = (fn: () => void) => {
 function App() {
     const [state, setState] = useState("started")
     const [hardMode, setHardMode] = useState(false)
-    const toggleHardMode = () => setHardMode((hardMode) => !hardMode)
 
     const handleCompleted = () => {
         setState("completed")
@@ -118,18 +96,41 @@ function App() {
         return handleEnterPressed(handleStart)
     }, [state])
 
+    const header = (
+        <>
+            <Group position="apart">
+
+                <Text size="xl" weight="bolder">
+                    Vinthundsgatan 4 - Matte
+                </Text>
+                <Group>
+                    <Text size={"xl"} weight="bold">{hardMode ? HardText : MediumText}</Text>
+                </Group>
+            </Group>
+            <Group position="apart" pb="lg">
+                <Text>Problem {progress.current} av {progress.total}</Text>
+                <Switch
+                    checked={hardMode} size="sm"
+                    onChange={(event) => setHardMode(event.currentTarget.checked)}
+                />
+            </Group>
+        </>
+    )
+
     return (
-        <div className="App">
-            <AppHeader progress={progress} onToggleMode={toggleHardMode} hardMode={hardMode}/>
-            <header className="App-body">
+        <MantineProvider>
+            <ApplicationContainer header={header}>
+                <Group position="center" mx="auto" direction="column" style={{
+                    height: '100vh',
+                }}>
+                    {state === "completed" && (
+                        <div onClick={handleStart}>Klicka här för att börja om!</div>
+                    )}
 
-                {state === "completed" && (
-                    <div onClick={handleStart}>Klicka här för att börja om!</div>
-                )}
-
-                {state === "started" && <ProblemComponent problem={problem} onAnswer={handleAnswer}/>}
-            </header>
-        </div>
+                    {state === "started" && <ProblemComponent problem={problem} onAnswer={handleAnswer}/>}
+                </Group>
+            </ApplicationContainer>
+        </MantineProvider>
     )
 }
 

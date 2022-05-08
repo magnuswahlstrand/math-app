@@ -3,6 +3,7 @@ import CSS from 'csstype';
 import squareImage from "./images/square_cropped.png"
 import rectangleImage from "./images/rectangle_cropped.png"
 import triangleImage from "./images/triangle_cropped.png"
+import {Group} from "@mantine/core";
 
 
 const inputStyle: CSS.Properties = {
@@ -46,7 +47,7 @@ export const ProblemImage: React.FC<{ name: string, numbers: number[] }> = ({nam
     }
 
     return (
-        <div style={{color: 'black', display: 'flex', flexDirection: 'column'}}>
+        <Group direction="column" position="center">
             <div style={{position: "relative", top: offsetTop}}>{top}</div>
             <div style={{
                 display: 'flex',
@@ -58,7 +59,7 @@ export const ProblemImage: React.FC<{ name: string, numbers: number[] }> = ({nam
                 {right}
             </div>
             <div>{bottom}</div>
-        </div>
+        </Group>
     )
 }
 

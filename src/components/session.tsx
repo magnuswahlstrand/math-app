@@ -2,11 +2,11 @@ import React from "react";
 import {AnswerBox} from "./answerBox";
 import {Problem} from "../common/types";
 import ProblemImage from "./problemImage";
+import {Group, Text} from "@mantine/core";
 
 function ProblemBox(props: { text: string }) {
-    return (<div style={{fontSize: "2em"}}>
-        {props.text}
-    </div>);
+
+    return (<Text mx="xl" px="xl" size="xl" align="justify">{props.text}</Text>)
 }
 
 interface InputProps {
@@ -26,11 +26,11 @@ const Session: React.FC<InputProps> = ({problem = null, onAnswer}) => {
     }
 
     return (
-        <>
+        <Group direction="column" position="center" spacing={0} mt="xl">
             {image}
             <ProblemBox text={`${problem.text}`}/>
             <AnswerBox onAnswerSubmitted={onAnswer}/>
-        </>
+        </Group>
     );
 }
 
